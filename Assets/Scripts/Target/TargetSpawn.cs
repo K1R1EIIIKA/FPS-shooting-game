@@ -4,15 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class TargetSpawn : MonoBehaviour
 {
-    [SerializeField] private GameObject targetPrefab;
-    [SerializeField] private Vector2 timeRange;
+    [SerializeField] private List<GameObject> targetPrefabs;
+    [SerializeField] private List<float> chances;
+    [SerializeField] private Vector2 spawnTimeRange;
     [SerializeField] private Transform[] tracks = new Transform[7];
 
+    public float targetSpeed = 5;
+    public float maxZRange = 8;
+
+    public static TargetSpawn Instance;
+
     private bool[] _currentTracks = new bool[7];
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     private void Start()
     {
@@ -21,25 +36,22 @@ public class TargetSpawn : MonoBehaviour
 
         StartCoroutine(StartTargetSpawn());
     }
-    
-
-    private void Update()
-    {
-        
-    }
 
     private IEnumerator StartTargetSpawn()
     {
-        if (_currentTracks.Count(x => x) > 0) 
+        if (!GameManager.Instance.isGame)
+            yield break;
+
+        if (_currentTracks.Count(x => x) > 0)
             SpawnTarget();
 
-        float time = Random.Range(timeRange.x, timeRange.y);
-        Debug.Log(time);
+        float time = Random.Range(spawnTimeRange.x, spawnTimeRange.y);
+
         yield return new WaitForSeconds(time);
         StartCoroutine(StartTargetSpawn());
     }
 
-    private GameObject SpawnTarget()
+    private void SpawnTarget()
     {
         int trackIndex;
         while (true)
@@ -51,7 +63,37 @@ public class TargetSpawn : MonoBehaviour
                 break;
             }
         }
-        
-        return Instantiate(targetPrefab, tracks[trackIndex].position, Quaternion.identity, transform);
+
+        int randNum = Random.Range(1, 101);
+        float num = 0;
+        for (int i = 0; i < chances.Count; i++)
+        {
+            if (randNum > num && randNum <= chances[i] + num)
+            {
+                GameObject target = Instantiate(targetPrefabs[i], tracks[trackIndex].position, Quaternion.identity,
+                    transform);
+                Debug.Log(target.name + " " + randNum);
+                target.GetComponent<TargetMovement>().targetIndex = trackIndex;
+            }
+
+            num += chances[i];
+        }
+    }
+
+    
+    public void DeleteTarget(GameObject target, int index)
+    {
+        _currentTracks[index] = true;
+        Destroy(target);
+    }
+
+    public static void DeleteAllTargets()
+    {
+        List<GameObject> targets = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+
+        foreach (GameObject target in targets)
+        {
+            Destroy(target);
+        }
     }
 }

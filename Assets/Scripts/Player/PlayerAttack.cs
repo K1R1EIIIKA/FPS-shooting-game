@@ -1,18 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Camera _mainCamera;
+    private float _attackCooldown = 0.5f;
+    private bool _isCooldown;
+
+    private void Awake()
     {
-        
+        _mainCamera = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isCooldown)
+            HitLogic();
+    }
+
+    private void HitLogic()
+    {
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.transform.CompareTag("Enemy"))
+            {
+                GameObject target = hit.transform.gameObject;
+                GameManager.Instance.points++;
+                TargetSpawn.Instance.DeleteTarget(target, target.GetComponent<TargetMovement>().targetIndex);
+            }
+        }
     }
 }
