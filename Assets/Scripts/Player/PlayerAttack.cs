@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField] private float attackCooldown = 0.5f;
+    
     private Camera _mainCamera;
-    private float _attackCooldown = 0.5f;
     private bool _isCooldown;
 
     private void Awake()
@@ -22,6 +24,9 @@ public class PlayerAttack : MonoBehaviour
 
     private void HitLogic()
     {
+        StartCoroutine(SetCooldown());
+        
+        FindObjectOfType<AudioManager>().Play("Pew");
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -34,5 +39,12 @@ public class PlayerAttack : MonoBehaviour
                 TargetSpawn.Instance.DeleteTarget(target, targetInfo.targetIndex);
             }
         }
+    }
+
+    private IEnumerator SetCooldown()
+    {
+        _isCooldown = true;
+        yield return new WaitForSeconds(attackCooldown);
+        _isCooldown = false;
     }
 }
