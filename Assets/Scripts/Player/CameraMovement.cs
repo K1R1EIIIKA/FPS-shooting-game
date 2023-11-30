@@ -32,6 +32,7 @@ public class CameraMovement : MonoBehaviour
     private void Update()
     {
         LockLogic();
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation + 180, 0);
         if (!_isLocked) return;
         
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
@@ -39,10 +40,11 @@ public class CameraMovement : MonoBehaviour
 
         _yRotation += mouseX;
         
+        
         _xRotation -= mouseY;
         _xRotation = Math.Clamp(_xRotation, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation + 180, 0);
     }
 
     private void LockLogic()

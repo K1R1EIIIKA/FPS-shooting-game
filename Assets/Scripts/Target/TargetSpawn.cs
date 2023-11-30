@@ -15,7 +15,6 @@ public class TargetSpawn : MonoBehaviour
     [SerializeField] private Transform[] tracks = new Transform[7];
 
     public float targetSpeed = 5;
-    public float maxZRange = 8;
 
     public static TargetSpawn Instance;
 
@@ -70,10 +69,9 @@ public class TargetSpawn : MonoBehaviour
         {
             if (randNum > num && randNum <= chances[i] + num)
             {
-                GameObject target = Instantiate(targetPrefabs[i], tracks[trackIndex].position, Quaternion.identity,
-                    transform);
-                Debug.Log(target.name + " " + randNum);
+                GameObject target = Instantiate(targetPrefabs[i], tracks[trackIndex].position, Quaternion.identity, transform);
                 target.GetComponent<TargetMovement>().targetIndex = trackIndex;
+                return;
             }
 
             num += chances[i];

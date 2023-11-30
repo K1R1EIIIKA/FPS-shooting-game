@@ -28,8 +28,10 @@ public class PlayerAttack : MonoBehaviour
             if (hit.transform.CompareTag("Enemy"))
             {
                 GameObject target = hit.transform.gameObject;
-                GameManager.Instance.points++;
-                TargetSpawn.Instance.DeleteTarget(target, target.GetComponent<TargetMovement>().targetIndex);
+                TargetMovement targetInfo = target.GetComponent<TargetMovement>();
+                GameManager.Instance.points += targetInfo.pointsGain;
+                
+                TargetSpawn.Instance.DeleteTarget(target, targetInfo.targetIndex);
             }
         }
     }

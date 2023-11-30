@@ -6,23 +6,27 @@ using UnityEngine;
 public class TargetMovement : MonoBehaviour
 {
     [HideInInspector] public int targetIndex;
+    public int pointsGain;
 
-    private float _startZPosition;
+    [SerializeField] private float lifeSpawn;
 
     private void Start()
     {
-        _startZPosition = transform.position.z;
+        StartCoroutine(StartLifeSpawn());
     }
 
     private void Update()
     {
         Move();
+    }
+
+    private IEnumerator StartLifeSpawn()
+    {
+        yield return new WaitForSeconds(lifeSpawn);
         
-        if (transform.position.z - _startZPosition >= TargetSpawn.Instance.maxZRange)
-        {
-            TargetSpawn.Instance.DeleteTarget(gameObject, targetIndex);
+        TargetSpawn.Instance.DeleteTarget(gameObject, targetIndex);
+        if (GameManager.Instance.points > 0)
             GameManager.Instance.points--;
-        }
     }
 
     private void Move()

@@ -119,3 +119,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetIndex: 0
+  pointsGain: 5
+  lifeSpawn: 2.5
