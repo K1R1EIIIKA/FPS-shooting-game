@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float sensX;
     [SerializeField] private float sensY;
+    [SerializeField] private Transform cameraOrientation;
 
     public static CameraMovement Instance;
 
@@ -45,6 +46,9 @@ public class CameraMovement : MonoBehaviour
         _xRotation = Math.Clamp(_xRotation, -90f, 90f);
 
         transform.rotation = Quaternion.Euler(_xRotation, _yRotation + 180, 0);
+        cameraOrientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+
+        transform.position = cameraOrientation.position;
     }
 
     private void LockLogic()

@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject gameEndCanvas;
     [SerializeField] private TextMeshProUGUI pointsText;
+    [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float gameTimer = 30;
     
     public int points;
     [HideInInspector] public bool isGame = true;
+
+    private float _secs;
 
     public static GameManager Instance;
     
@@ -26,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _secs = gameTimer;
         StartCoroutine(StartTimer());
     }
 
@@ -36,8 +40,17 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartTimer()
     {
-        yield return new WaitForSeconds(gameTimer);
-        EndGame();
+        timerText.text = "Time: " + _secs;
+        yield return new WaitForSeconds(1);
+        _secs--;
+        
+        if (_secs <= 0)
+        {
+            EndGame();
+            yield break;
+        }
+        
+        StartCoroutine(StartTimer());
     }
 
     private void EndGame()
