@@ -966,7 +966,7 @@ MonoBehaviour:
   endPointsText: {fileID: 1634859388}
   timerText: {fileID: 970245583}
   startTimerText: {fileID: 249957465}
-  gameTimer: 5
+  gameTimer: 30
   startTimer: 3
   points: 0
 --- !u!4 &272580759
