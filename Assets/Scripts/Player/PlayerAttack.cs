@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isCooldown)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isCooldown && GameManager.Instance.IsGame)
             HitLogic();
     }
 

@@ -49,7 +49,7 @@ public class CameraMovement : MonoBehaviour
 
     private void LockLogic()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.isGame)
+        if (Input.GetKeyDown(KeyCode.Escape) && GameManager.Instance.IsGame)
         {
             if (_isLocked)
                 UnlockCursor();
@@ -57,7 +57,7 @@ public class CameraMovement : MonoBehaviour
                 LockCursor();
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isLocked && GameManager.Instance.isGame)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_isLocked && GameManager.Instance.IsGame)
             LockCursor();
     }
 

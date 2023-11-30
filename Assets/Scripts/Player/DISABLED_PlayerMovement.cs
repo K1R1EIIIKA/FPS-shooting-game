@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void Update()
     {
-        if (!GameManager.Instance.isGame)
+        if (!GameManager.Instance.IsGame)
             return;
 
         Move();

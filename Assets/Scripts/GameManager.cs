@@ -8,14 +8,19 @@ using UnityEngine.Serialization;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject gameEndCanvas;
+    [SerializeField] private GameObject startTimerCanvas;
     [SerializeField] private TextMeshProUGUI pointsText;
+    [SerializeField] private TextMeshProUGUI endPointsText;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI startTimerText;
     [SerializeField] private float gameTimer = 30;
+    [SerializeField] private float startTimer = 3;
     
     public int points;
-    [HideInInspector] public bool isGame = true;
+    [NonSerialized] public bool IsGame;
 
     private float _secs;
+    private float _startSecs;
 
     public static GameManager Instance;
     
@@ -30,17 +35,38 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _secs = gameTimer;
+        _startSecs = startTimer;
+        startTimerCanvas.SetActive(true);
         StartCoroutine(StartTimer());
     }
 
     private void Update()
     {
         pointsText.text = "Points: " + points;
+        timerText.text = "Time: " + _secs;
     }
 
     private IEnumerator StartTimer()
     {
-        timerText.text = "Time: " + _secs;
+        startTimerText.text = _startSecs.ToString();
+        yield return new WaitForSeconds(1);
+        _startSecs--;
+        
+        if (_startSecs <= 0)
+        {
+            StartGame();
+            StartCoroutine(Timer());
+            StartCoroutine(TargetSpawn.Instance.StartTargetSpawn());
+            startTimerCanvas.SetActive(false);
+            
+            yield break;
+        }
+
+        StartCoroutine(StartTimer());
+    }
+
+    private IEnumerator Timer()
+    {
         yield return new WaitForSeconds(1);
         _secs--;
         
@@ -50,12 +76,18 @@ public class GameManager : MonoBehaviour
             yield break;
         }
         
-        StartCoroutine(StartTimer());
+        StartCoroutine(Timer());
+    }
+
+    private void StartGame()
+    {
+        IsGame = true;
     }
 
     private void EndGame()
     {
-        isGame = false;
+        IsGame = false;
+        endPointsText.text = "Points: " + points;
         gameEndCanvas.SetActive(true);
         TargetSpawn.DeleteAllTargets();
         CameraMovement.Instance.UnlockCursor();

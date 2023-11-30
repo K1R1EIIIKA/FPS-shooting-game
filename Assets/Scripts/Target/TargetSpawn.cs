@@ -32,13 +32,11 @@ public class TargetSpawn : MonoBehaviour
     {
         for (var i = 0; i < _currentTracks.Length; i++)
             _currentTracks[i] = true;
-
-        StartCoroutine(StartTargetSpawn());
     }
 
-    private IEnumerator StartTargetSpawn()
+    public IEnumerator StartTargetSpawn()
     {
-        if (!GameManager.Instance.isGame)
+        if (!GameManager.Instance.IsGame)
             yield break;
 
         if (_currentTracks.Count(x => x) > 0)
